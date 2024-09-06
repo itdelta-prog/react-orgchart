@@ -30,7 +30,7 @@ const ChartNode = ({
 }) => {
   const node = useRef();
 
-  const [isChildrenCollapsed, setIsChildrenCollapsed] = useState(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_childrenExpanded') ?? undefined);
+  const [isChildrenCollapsed, setIsChildrenCollapsed] = useState(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_childrenExpanded') ?? false);
   const [topEdgeExpanded, setTopEdgeExpanded] = useState(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_topEdgeExpanded') ?? undefined);
   const [rightEdgeExpanded, setRightEdgeExpanded] = useState(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_rightEdgeExpanded') ?? undefined);
   const [bottomEdgeExpanded, setBottomEdgeExpanded] = useState(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_bottomEdgeExpanded') ?? undefined);
