@@ -36,11 +36,21 @@ const ChartNode = _ref => {
     onClickNode
   } = _ref;
   const node = (0, _react.useRef)();
-  const [isChildrenCollapsed, setIsChildrenCollapsed] = (0, _react.useState)(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_childrenExpanded') ?? false);
-  const [topEdgeExpanded, setTopEdgeExpanded] = (0, _react.useState)(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_topEdgeExpanded') ?? undefined);
-  const [rightEdgeExpanded, setRightEdgeExpanded] = (0, _react.useState)(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_rightEdgeExpanded') ?? undefined);
-  const [bottomEdgeExpanded, setBottomEdgeExpanded] = (0, _react.useState)(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_bottomEdgeExpanded') ?? undefined);
-  const [leftEdgeExpanded, setLeftEdgeExpanded] = (0, _react.useState)(localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_leftEdgeExpanded') ?? undefined);
+  const setExpandedLocalStorage = (name, value) => {
+    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_' + name, value);
+  };
+  const getExpandedLocalStorage = (name, returnFalse) => {
+    const value = localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_' + name);
+    if (value) {
+      return !!value;
+    }
+    return returnFalse ? false : undefined;
+  };
+  const [isChildrenCollapsed, setIsChildrenCollapsed] = (0, _react.useState)(getExpandedLocalStorage('childrenExpanded', true));
+  const [topEdgeExpanded, setTopEdgeExpanded] = (0, _react.useState)(getExpandedLocalStorage('topEdgeExpanded'));
+  const [rightEdgeExpanded, setRightEdgeExpanded] = (0, _react.useState)(getExpandedLocalStorage('rightEdgeExpanded'));
+  const [bottomEdgeExpanded, setBottomEdgeExpanded] = (0, _react.useState)(getExpandedLocalStorage('bottomEdgeExpanded'));
+  const [leftEdgeExpanded, setLeftEdgeExpanded] = (0, _react.useState)(getExpandedLocalStorage('leftEdgeExpanded'));
   const [allowedDrop, setAllowedDrop] = (0, _react.useState)(false);
   const [selected, setSelected] = (0, _react.useState)(false);
   const nodeClass = ["oc-node", isChildrenCollapsed ? "isChildrenCollapsed" : "", allowedDrop ? "allowedDrop" : "", selected ? "selected" : ""].filter(item => item).join(" ");
@@ -79,20 +89,21 @@ const ChartNode = _ref => {
     setRightEdgeExpanded(!isSiblingsCollapsed);
     setLeftEdgeExpanded(!isSiblingsCollapsed);
     setBottomEdgeExpanded(!isChildrenCollapsed);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_topEdgeExpanded', !isAncestorsCollapsed);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_rightEdgeExpanded', !isSiblingsCollapsed);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_leftEdgeExpanded', !isSiblingsCollapsed);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_bottomEdgeExpanded', !isChildrenCollapsed);
+    setExpandedLocalStorage('topEdgeExpanded', !isAncestorsCollapsed);
+    setExpandedLocalStorage('rightEdgeExpanded', !isSiblingsCollapsed);
+    setExpandedLocalStorage('leftEdgeExpanded', !isSiblingsCollapsed);
+    setExpandedLocalStorage('bottomEdgeExpanded', !isChildrenCollapsed);
   };
   const removeArrows = () => {
     setTopEdgeExpanded(undefined);
     setRightEdgeExpanded(undefined);
     setBottomEdgeExpanded(undefined);
     setLeftEdgeExpanded(undefined);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_topEdgeExpanded', undefined);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_rightEdgeExpanded', undefined);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_leftEdgeExpanded', undefined);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_bottomEdgeExpanded', undefined);
+    setExpandedLocalStorage('topEdgeExpanded', undefined);
+    setExpandedLocalStorage('rightEdgeExpanded', undefined);
+    ;
+    setExpandedLocalStorage('leftEdgeExpanded', undefined);
+    setExpandedLocalStorage('bottomEdgeExpanded', undefined);
   };
   const toggleAncestors = actionNode => {
     let node = actionNode.parentNode.closest("li");
@@ -119,15 +130,15 @@ const ChartNode = _ref => {
   const topEdgeClickHandler = e => {
     e.stopPropagation();
     setTopEdgeExpanded(!topEdgeExpanded);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_topEdgeExpanded', !topEdgeExpanded);
+    setExpandedLocalStorage('topEdgeExpanded', !topEdgeExpanded);
     toggleAncestors(e.target.closest("li"));
   };
   const bottomEdgeClickHandler = e => {
     e.stopPropagation();
     setIsChildrenCollapsed(!isChildrenCollapsed);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_childrenExpanded', !isChildrenCollapsed);
+    setExpandedLocalStorage('childrenExpanded', !isChildrenCollapsed);
     setBottomEdgeExpanded(!bottomEdgeExpanded);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_bottomEdgeExpanded', !bottomEdgeExpanded);
+    setExpandedLocalStorage('bottomEdgeExpanded', !bottomEdgeExpanded);
   };
   const toggleSiblings = actionNode => {
     let node = actionNode.previousSibling;
@@ -161,8 +172,8 @@ const ChartNode = _ref => {
     e.stopPropagation();
     setLeftEdgeExpanded(!leftEdgeExpanded);
     setRightEdgeExpanded(!rightEdgeExpanded);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_leftEdgeExpanded', !leftEdgeExpanded);
-    localStorage.setItem(window.location.pathname + ' ' + datasource.id + '_rightEdgeExpanded', !rightEdgeExpanded);
+    setExpandedLocalStorage('leftEdgeExpanded', !leftEdgeExpanded);
+    setExpandedLocalStorage('rightEdgeExpanded', !rightEdgeExpanded);
     toggleSiblings(e.target.closest("li"));
   };
   const filterAllowedDropNodes = id => {
