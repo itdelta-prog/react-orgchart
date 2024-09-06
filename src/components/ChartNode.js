@@ -30,9 +30,9 @@ const ChartNode = ({
 }) => {
   const node = useRef();
 
-  const setExpandedLocalStorage = (name, value) => {
+  const setExpandedLocalStorage = (name, value, customId) => {
     localStorage.setItem(
-      window.location.pathname + ' ' + datasource.id + '_' + name,
+      window.location.pathname + ' ' + customId ?? datasource.id + '_' + name,
       value
     );
   };
@@ -145,6 +145,8 @@ const ChartNode = ({
       // 向上展开，只展开一级
       actionNode.classList.remove("isAncestorsCollapsed");
       node.firstChild.classList.remove("hidden");
+      const id = node.firstChild.querySelector('div').getAttribute('id');
+      setExpandedLocalStorage('childrenExpanded', false, +id)
     } else {
       // 向下折叠，则折叠所有祖先节点以及祖先节点的兄弟节点
       const isSiblingsCollapsed = Array.from(
@@ -160,6 +162,9 @@ const ChartNode = ({
         ).split(" ")
       );
       node.firstChild.classList.add("hidden");
+      const id = node.firstChild.querySelector('div').getAttribute('id');
+      setExpandedLocalStorage('childrenExpanded', true, +id)
+      
       // 如果还有展开的祖先节点，那继续折叠关闭之
       if (
         node.parentNode.closest("li") &&
@@ -195,8 +200,12 @@ const ChartNode = ({
     while (node) {
       if (isSiblingsCollapsed) {
         node.classList.remove("hidden");
+        const id = node.querySelector('div').getAttribute('id');
+        setExpandedLocalStorage('childrenExpanded', false, +id)
       } else {
         node.classList.add("hidden");
+        const id = node.querySelector('div').getAttribute('id');
+        setExpandedLocalStorage('childrenExpanded', true, +id)
       }
       node = node.previousSibling;
     }
@@ -204,8 +213,12 @@ const ChartNode = ({
     while (node) {
       if (isSiblingsCollapsed) {
         node.classList.remove("hidden");
+        const id = node.querySelector('div').getAttribute('id');
+        setExpandedLocalStorage('childrenExpanded', false, +id)
       } else {
         node.classList.add("hidden");
+        const id = node.querySelector('div').getAttribute('id');
+        setExpandedLocalStorage('childrenExpanded', true, +id)
       }
       node = node.nextSibling;
     }
