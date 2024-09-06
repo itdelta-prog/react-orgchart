@@ -26,7 +26,8 @@ const propTypes = {
   collapsible: PropTypes.bool,
   multipleSelect: PropTypes.bool,
   onClickNode: PropTypes.func,
-  onClickChart: PropTypes.func
+  onClickChart: PropTypes.func,
+  onZoomChange: PropTypes.func
 };
 
 const defaultProps = {
@@ -291,6 +292,16 @@ const ChartContainer = forwardRef(
               "isAncestorsCollapsed"
             );
           });
+      },
+      setZoom: (newScale) => {
+        if(newScale < zoomoutLimit) {
+          newScale = zoomoutLimit
+        }
+        if(newScale > zoominLimit) {
+          newScale = zoominLimit
+        }
+        
+        updateChartScale(newScale)
       }
     }));
 
