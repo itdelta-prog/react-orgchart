@@ -40,6 +40,9 @@ const ChartNode = ({
   const getExpandedLocalStorage = (name, returnFalse) => {
     const value = localStorage.getItem(window.location.pathname + ' ' + datasource.id + '_' + name);
     if(value) {
+      if(value === 'undefined') {
+        return undefined
+      }
       return 'true' === value
     }
     return returnFalse ? false : undefined
